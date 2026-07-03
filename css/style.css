@@ -1,0 +1,319 @@
+/* =========================================================
+   Fusión & Sabor Nariñense — Carta (tamaño carta / Letter)
+   Versión compacta — 2 hojas
+   ========================================================= */
+
+:root{
+  --wood-dark:#2e1d12;
+  --paper:#f1e6c9;
+  --paper-deep:#e8d8ad;
+  --ink:#3a2615;
+  --ink-soft:#6b4e30;
+  --terracotta:#b3452a;
+  --terracotta-deep:#8c3220;
+  --gold:#a87b2e;
+  --line:#c8b074;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--wood-dark);
+  font-family:'EB Garamond', serif;
+  color:var(--ink);
+}
+
+/* ---------------------------------------------------------
+   Wrapper
+   --------------------------------------------------------- */
+.menu-wrap{
+  padding:32px 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:26px;
+}
+
+/* ---------------------------------------------------------
+   SHEET = one physical Letter page (8.5in x 11in)
+   --------------------------------------------------------- */
+.sheet{
+  width:8.5in;
+  min-height:11in;
+  max-width:100%;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.25), transparent 45%),
+    linear-gradient(160deg, var(--paper) 0%, var(--paper-deep) 100%);
+  padding:0.45in 0.42in 0.35in;
+  position:relative;
+  box-shadow:0 18px 45px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.25);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.sheet::before{
+  content:"";
+  position:absolute;inset:7px;
+  border:1px solid rgba(168,123,46,0.35);
+  pointer-events:none;
+}
+
+.motif{position:absolute;width:22px;height:22px;
+  background-image:linear-gradient(45deg, var(--gold) 25%, transparent 25%, transparent 75%, var(--gold) 75%),
+                    linear-gradient(45deg, var(--gold) 25%, transparent 25%, transparent 75%, var(--gold) 75%);
+  background-size:6px 6px;background-position:0 0,3px 3px;opacity:0.35;}
+.motif.tl{top:13px;left:13px;}
+.motif.br{bottom:13px;right:13px;}
+
+/* ---------------------------------------------------------
+   MASTHEAD
+   --------------------------------------------------------- */
+.masthead{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-bottom:8px;
+  margin-bottom:10px;
+  border-bottom:2px solid var(--terracotta);
+  flex-wrap:wrap;
+}
+.logo-slot{
+  flex:0 0 auto;
+  width:50px;
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  overflow:hidden;
+  background:#12100e;
+}
+.logo-slot img{width:100%;height:100%;object-fit:contain;}
+.masthead-text{flex:1;min-width:140px;}
+.eyebrow{
+  font-family:'EB Garamond',serif;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  font-size:9.5px;
+  color:var(--terracotta-deep);
+  margin:0 0 1px;
+}
+.wordmark{
+  font-family:'Fraunces',serif;
+  font-weight:700;
+  font-style:italic;
+  font-size:22px;
+  line-height:1.1;
+  margin:0;
+  color:var(--ink);
+}
+.page-tag{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:11px;
+  color:var(--ink-soft);
+  white-space:nowrap;
+}
+
+/* ---------------------------------------------------------
+   FEATURE PHOTOS — 2 large photo slots per sheet
+   --------------------------------------------------------- */
+.feature-photo{
+  width:100%;
+  height:78px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:1.4px dashed var(--gold);
+  background:
+    repeating-linear-gradient(45deg, rgba(168,123,46,0.08) 0 8px, transparent 8px 16px),
+    rgba(255,255,255,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.feature-photo img{width:100%;height:100%;object-fit:cover;}
+.feature-photo span{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:12px;
+  color:var(--ink-soft);
+}
+.feature-photo.bottom{margin-bottom:8px;margin-top:auto;}
+
+/* ---------------------------------------------------------
+   SECTIONS
+   --------------------------------------------------------- */
+.section{margin-bottom:11px;}
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:14.5px;
+  color:var(--terracotta-deep);
+  margin:0 0 5px;
+}
+.section-title::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px);
+}
+.section-note{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:9.5px;
+  color:var(--ink-soft);
+  margin:-3px 0 5px;
+}
+
+/* ---------------------------------------------------------
+   DISH LIST — 2-col text flow for full-width sections
+   --------------------------------------------------------- */
+.dish-list{
+  column-count:2;
+  column-gap:18px;
+}
+/* inside a split column, the split itself is the 2-column layout,
+   so lists there stay single-column */
+.col .dish-list{column-count:1;}
+
+.item-row{
+  break-inside:avoid;
+  -webkit-column-break-inside:avoid;
+  margin-bottom:3px;
+}
+.item-top{
+  display:flex;
+  align-items:baseline;
+  gap:5px;
+}
+.item-name{
+  font-weight:600;
+  font-size:10.8px;
+  color:var(--ink);
+  line-height:1.2;
+}
+.item-leader{
+  flex:1;
+  border-bottom:1px dotted #9c7a45;
+  transform:translateY(-2px);
+  min-width:5px;
+}
+.item-price{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:10.8px;
+  color:var(--terracotta-deep);
+  white-space:nowrap;
+}
+.item-desc{
+  display:block;
+  font-style:italic;
+  font-size:9px;
+  line-height:1.2;
+  color:var(--ink-soft);
+}
+
+.flavor-line{
+  font-size:10.5px;
+  color:var(--ink);
+  margin:3px 0 0;
+}
+.flavor-line b{color:var(--terracotta-deep);font-weight:600;}
+
+/* ---------------------------------------------------------
+   SPLIT LAYOUT (a wide column + a stacked column)
+   --------------------------------------------------------- */
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 20px;
+  align-items:start;
+}
+.col{min-width:0;}
+.col .section:last-child{margin-bottom:0;}
+
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
+.footer{
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-top:7px;
+  border-top:1px solid var(--line);
+  flex-wrap:wrap;
+  gap:5px 14px;
+}
+.social{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px 10px;
+  align-items:center;
+  font-size:10px;
+  color:var(--ink);
+}
+.social span{display:flex;align-items:center;gap:4px;}
+.footer-tag{
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:9.5px;
+  color:var(--ink-soft);
+}
+
+/* =========================================================
+   RESPONSIVE (screen)
+   ========================================================= */
+@media (max-width: 900px){
+  .sheet{width:100%;min-height:auto;padding:22px 18px 18px;}
+  .wordmark{font-size:19px;}
+}
+
+@media (max-width: 560px){
+  .menu-wrap{padding:14px 6px;gap:16px;}
+  .sheet{padding:16px 12px 14px;}
+  .logo-slot{width:42px;height:42px;}
+  .wordmark{font-size:16px;}
+  .eyebrow{font-size:8.5px;letter-spacing:0.16em;}
+  .page-tag{font-size:9.5px;}
+
+  .section-title{font-size:13.5px;}
+  .section-note{font-size:9px;}
+
+  .split{grid-template-columns:1fr;gap:0;}
+  .dish-list{column-count:1;}
+  .item-name{font-size:11.5px;}
+  .item-desc{font-size:9.5px;}
+  .item-price{font-size:11.5px;}
+
+  .feature-photo{height:70px;margin-bottom:8px;}
+
+  .footer{flex-direction:column;align-items:flex-start;}
+}
+
+/* =========================================================
+   PRINT — one .sheet per physical Letter page
+   ========================================================= */
+@page{
+  size: letter;
+  margin: 0;
+}
+@media print{
+  body{background:#fff;}
+  .menu-wrap{padding:0;gap:0;}
+  .sheet{
+    box-shadow:none;
+    width:8.5in;
+    height:11in;
+    min-height:11in;
+    page-break-after:always;
+  }
+  .sheet:last-child{page-break-after:auto;}
+  .dish-list{column-count:2;}
+  .col .dish-list{column-count:1;}
+}
