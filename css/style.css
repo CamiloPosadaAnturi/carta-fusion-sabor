@@ -1,24 +1,33 @@
 /* =========================================================
    Fusión & Sabor Nariñense — Carta (tamaño carta / Letter)
-   Versión compacta — 2 hojas
+   v3 — paleta "cuero claro" oscurecida, manchas de vaca
+   reales solo en las bandas laterales, óvalos de sección,
+   logo a la derecha.
    ========================================================= */
 
 :root{
-  --wood-dark:#2e1d12;
-  --paper:#f1e6c9;
-  --paper-deep:#e8d8ad;
-  --ink:#3a2615;
-  --ink-soft:#6b4e30;
+  --hide-black:#120b07;
+  --hide-black-deep:#0a0605;
+  --wood-dark:#1c120a;
+  --paper:#c9a66c;        /* beige más oscuro, tipo cuero claro */
+  --paper-deep:#ab8347;   /* sombra del mismo cuero */
+  --ink:#2b1c10;
+  --ink-soft:#5c4023;
   --terracotta:#b3452a;
-  --terracotta-deep:#8c3220;
+  --terracotta-deep:#7e2c1b;
+  --ember:#d9622a;
   --gold:#a87b2e;
-  --line:#c8b074;
+  --line:#a98a4e;
+  --cream:#f1e6c9;
+  --band-w:0.34in;
+  --spot-base:#f1e6c9;   /* fondo claro de la banda con manchas */
+  --spot-black:#0a0605;  /* color de las manchas */
 }
 
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
-  background:var(--wood-dark);
+  background:var(--hide-black-deep);
   font-family:'EB Garamond', serif;
   color:var(--ink);
 }
@@ -35,38 +44,69 @@ body{
 }
 
 /* ---------------------------------------------------------
-   SHEET = one physical Letter page (8.5in x 11in)
+   SHEET = una hoja carta.
+   El fondo del propio .sheet ahora es un patrón real de
+   "manchas de vaca" (blobs negros irregulares sobre un
+   fondo claro) que se repite verticalmente. Como el panel
+   de papel (::before) tapa toda la zona central, lo único
+   que queda visible de este fondo son las dos bandas
+   laterales de --band-w de ancho, que es justo donde
+   queremos el efecto de piel de vaca.
    --------------------------------------------------------- */
 .sheet{
   width:8.5in;
   min-height:11in;
   max-width:100%;
-  background:
-    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.25), transparent 45%),
-    linear-gradient(160deg, var(--paper) 0%, var(--paper-deep) 100%);
-  padding:0.45in 0.42in 0.35in;
   position:relative;
-  box-shadow:0 18px 45px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.25);
+  padding:0.42in calc(var(--band-w) + 0.3in) 0.35in;
+  box-shadow:0 18px 45px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,0,0,0.4);
   display:flex;
   flex-direction:column;
   overflow:hidden;
+  background-color:var(--hide-black);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='320' viewBox='0 0 140 320'%3E%3Crect width='140' height='320' fill='%23f1e6c9'/%3E%3Cg fill='%230a0605'%3E%3Cpath d='M15,10 Q45,-10 80,15 Q115,35 90,65 Q60,95 25,75 Q-5,55 15,10 Z'/%3E%3Cpath d='M100,90 Q130,75 140,105 Q145,140 115,150 Q85,155 80,125 Q78,100 100,90 Z'/%3E%3Cpath d='M10,150 Q40,130 75,155 Q105,180 75,210 Q45,235 15,205 Q-10,180 10,150 Z'/%3E%3Cpath d='M90,220 Q125,205 140,240 Q150,275 115,285 Q80,290 75,255 Q72,230 90,220 Z'/%3E%3Cpath d='M20,260 Q55,245 80,275 Q100,300 65,318 Q30,325 15,295 Q5,275 20,260 Z'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:repeat-y;
+  background-size:140px 320px;
+  background-position:center top;
 }
+
+/* panel de papel central, entre las dos bandas */
 .sheet::before{
   content:"";
-  position:absolute;inset:7px;
-  border:1px solid rgba(168,123,46,0.35);
+  position:absolute;
+  top:0; bottom:0;
+  left:var(--band-w); right:var(--band-w);
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255,255,255,0.18), transparent 45%),
+    linear-gradient(160deg, var(--paper) 0%, var(--paper-deep) 100%);
+  z-index:0;
+}
+/* marco fino dentro del papel */
+.sheet::after{
+  content:"";
+  position:absolute;
+  top:9px; bottom:9px;
+  left:calc(var(--band-w) + 9px); right:calc(var(--band-w) + 9px);
+  border:1px solid rgba(168,123,46,0.4);
   pointer-events:none;
+  z-index:1;
 }
 
-.motif{position:absolute;width:22px;height:22px;
+/* separador sutil entre banda y papel */
+.sheet{border-left:1px solid rgba(0,0,0,0.35);border-right:1px solid rgba(0,0,0,0.35);}
+
+/* todo el contenido real (hijos directos) va sobre el papel */
+.sheet > *{position:relative;z-index:2;}
+
+.motif{position:absolute;width:20px;height:20px;z-index:2;
   background-image:linear-gradient(45deg, var(--gold) 25%, transparent 25%, transparent 75%, var(--gold) 75%),
                     linear-gradient(45deg, var(--gold) 25%, transparent 25%, transparent 75%, var(--gold) 75%);
-  background-size:6px 6px;background-position:0 0,3px 3px;opacity:0.35;}
-.motif.tl{top:13px;left:13px;}
-.motif.br{bottom:13px;right:13px;}
+  background-size:6px 6px;background-position:0 0,3px 3px;opacity:0.4;}
+.motif.tl{top:16px;left:calc(var(--band-w) + 16px);}
+.motif.br{bottom:16px;right:calc(var(--band-w) + 16px);}
 
 /* ---------------------------------------------------------
-   MASTHEAD
+   MASTHEAD — logo a la derecha, tag a la izquierda
    --------------------------------------------------------- */
 .masthead{
   display:flex;
@@ -74,22 +114,38 @@ body{
   gap:12px;
   padding-bottom:8px;
   margin-bottom:10px;
-  border-bottom:2px solid var(--terracotta);
+  border-bottom:2px solid var(--terracotta-deep);
   flex-wrap:wrap;
 }
-.logo-slot{
+.masthead-photo{
+  order:1;
   flex:0 0 auto;
-  width:50px;
-  height:50px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:6px;
+  width:60px;
+  height:60px;
+  border-radius:8px;
   overflow:hidden;
-  background:#12100e;
+  border:1.5px solid var(--gold);
+  box-shadow:0 3px 6px rgba(0,0,0,0.3);
 }
-.logo-slot img{width:100%;height:100%;object-fit:contain;}
-.masthead-text{flex:1;min-width:140px;}
+.masthead-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.page-tag{
+  order:1;
+  font-family:'Fraunces',serif;
+  font-style:italic;
+  font-size:11px;
+  color:var(--ink-soft);
+  white-space:nowrap;
+}
+.masthead-text{
+  order:2;
+  flex:1;
+  min-width:140px;
+  text-align:center;
+}
 .eyebrow{
   font-family:'EB Garamond',serif;
   letter-spacing:0.22em;
@@ -107,33 +163,43 @@ body{
   margin:0;
   color:var(--ink);
 }
-.page-tag{
-  font-family:'Fraunces',serif;
-  font-style:italic;
-  font-size:11px;
-  color:var(--ink-soft);
-  white-space:nowrap;
-}
-
-/* ---------------------------------------------------------
-   FEATURE PHOTOS — 2 large photo slots per sheet
-   --------------------------------------------------------- */
-.feature-photo{
-  width:100%;
-  height:78px;
-  margin-bottom:10px;
-  border-radius:8px;
-  border:1.4px dashed var(--gold);
-  background:
-    repeating-linear-gradient(45deg, rgba(168,123,46,0.08) 0 8px, transparent 8px 16px),
-    rgba(255,255,255,0.15);
+.logo-slot{
+  order:3;
+  flex:0 0 auto;
+  width:52px;
+  height:52px;
   display:flex;
   align-items:center;
   justify-content:center;
+  border-radius:50%;
   overflow:hidden;
+  background:radial-gradient(circle at 35% 30%, #2a1c10, var(--hide-black) 75%);
+  border:2px solid var(--gold);
+  box-shadow:0 3px 8px rgba(0,0,0,0.35), inset 0 0 6px rgba(0,0,0,0.5);
+}
+.logo-slot img{width:100%;height:100%;object-fit:cover;}
+
+/* ---------------------------------------------------------
+   FEATURE PHOTOS — 2 recuadros grandes por hoja
+   --------------------------------------------------------- */
+.feature-photo{
+  width:100%;
+  margin:0 auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   flex:0 0 auto;
 }
-.feature-photo img{width:100%;height:100%;object-fit:cover;}
+.feature-photo img{
+  max-width:100%;
+  width:auto;
+  height:auto;
+  max-height:190px;
+  object-fit:contain;
+  border-radius:8px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.25);
+  display:block;
+}
 .feature-photo span{
   font-family:'Fraunces',serif;
   font-style:italic;
@@ -141,50 +207,48 @@ body{
   color:var(--ink-soft);
 }
 .feature-photo.bottom{margin-bottom:8px;margin-top:auto;}
-
 /* ---------------------------------------------------------
-   SECTIONS
+   SECTIONS — título en óvalo destacado
    --------------------------------------------------------- */
-.section{margin-bottom:11px;}
+.section{margin-bottom:14px;}
 .section-title{
-  display:flex;
-  align-items:center;
-  gap:7px;
+  display:inline-block;
   font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:14.5px;
-  color:var(--terracotta-deep);
-  margin:0 0 5px;
+  font-weight:700;
+  font-style:italic;
+  font-size:15px;
+  color:var(--cream);
+  margin:0 0 10px;
+  padding:7px 24px;
+  background:linear-gradient(155deg, var(--ember) 0%, var(--terracotta-deep) 100%);
+  border-radius:50px;
+  box-shadow:0 3px 6px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+  border:1px solid rgba(0,0,0,0.15);
+  transform:rotate(-1deg);
 }
-.section-title::after{
-  content:"";
-  flex:1;
-  height:1px;
-  background:repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px);
-}
+.section:nth-of-type(even) .section-title{transform:rotate(1deg);}
+
 .section-note{
   font-family:'Fraunces',serif;
   font-style:italic;
-  font-size:9.5px;
+  font-size:11px;
   color:var(--ink-soft);
-  margin:-3px 0 5px;
+  margin:-2px 0 8px;
 }
 
 /* ---------------------------------------------------------
-   DISH LIST — 2-col text flow for full-width sections
+   DISH LIST
    --------------------------------------------------------- */
 .dish-list{
   column-count:2;
   column-gap:18px;
 }
-/* inside a split column, the split itself is the 2-column layout,
-   so lists there stay single-column */
 .col .dish-list{column-count:1;}
 
 .item-row{
   break-inside:avoid;
   -webkit-column-break-inside:avoid;
-  margin-bottom:3px;
+  margin-bottom:7px;
 }
 .item-top{
   display:flex;
@@ -193,28 +257,28 @@ body{
 }
 .item-name{
   font-weight:600;
-  font-size:10.8px;
+  font-size:12.5px;
   color:var(--ink);
-  line-height:1.2;
+  line-height:1.3;
 }
 .item-leader{
   flex:1;
-  border-bottom:1px dotted #9c7a45;
+  border-bottom:1px dotted #7a5a2c;
   transform:translateY(-2px);
   min-width:5px;
 }
 .item-price{
   font-family:'Fraunces',serif;
-  font-weight:600;
-  font-size:10.8px;
+  font-weight:700;
+  font-size:12.5px;
   color:var(--terracotta-deep);
   white-space:nowrap;
 }
 .item-desc{
   display:block;
   font-style:italic;
-  font-size:9px;
-  line-height:1.2;
+  font-size:10.5px;
+  line-height:1.3;
   color:var(--ink-soft);
 }
 
@@ -226,13 +290,14 @@ body{
 .flavor-line b{color:var(--terracotta-deep);font-weight:600;}
 
 /* ---------------------------------------------------------
-   SPLIT LAYOUT (a wide column + a stacked column)
+   SPLIT LAYOUT
    --------------------------------------------------------- */
 .split{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:0 20px;
   align-items:start;
+  margin-top:24px;
 }
 .col{min-width:0;}
 .col .section:last-child{margin-bottom:0;}
@@ -267,22 +332,24 @@ body{
 }
 
 /* =========================================================
-   RESPONSIVE (screen)
+   RESPONSIVE (pantalla)
    ========================================================= */
 @media (max-width: 900px){
-  .sheet{width:100%;min-height:auto;padding:22px 18px 18px;}
+  :root{--band-w:14px;}
+  .sheet{width:100%;min-height:auto;padding:22px var(--band-w) 18px;}
   .wordmark{font-size:19px;}
 }
 
 @media (max-width: 560px){
+  :root{--band-w:8px;}
   .menu-wrap{padding:14px 6px;gap:16px;}
-  .sheet{padding:16px 12px 14px;}
+  .sheet{padding:16px var(--band-w) 14px;}
   .logo-slot{width:42px;height:42px;}
   .wordmark{font-size:16px;}
   .eyebrow{font-size:8.5px;letter-spacing:0.16em;}
   .page-tag{font-size:9.5px;}
 
-  .section-title{font-size:13.5px;}
+  .section-title{font-size:12px;padding:4px 16px;}
   .section-note{font-size:9px;}
 
   .split{grid-template-columns:1fr;gap:0;}
@@ -297,13 +364,14 @@ body{
 }
 
 /* =========================================================
-   PRINT — one .sheet per physical Letter page
+   PRINT — una .sheet por hoja carta física
    ========================================================= */
 @page{
   size: letter;
   margin: 0;
 }
 @media print{
+  :root{--band-w:0.34in;}
   body{background:#fff;}
   .menu-wrap{padding:0;gap:0;}
   .sheet{
@@ -316,4 +384,96 @@ body{
   .sheet:last-child{page-break-after:auto;}
   .dish-list{column-count:2;}
   .col .dish-list{column-count:1;}
+}
+
+.bebidas-photo-split{
+  margin-top:10px;
+  align-items:flex-start;
+  flex:1;
+  min-height:0;
+}
+.bebidas-photo-split .col{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+}
+.bebidas-photo-split .col:first-child{
+  align-items:flex-start;
+}
+.bebidas-photo-split .feature-photo.bottom{
+  margin:0;
+  width:290px;
+  height:290px;
+  flex:none;
+  border-radius:50%;
+  overflow:hidden;
+  border:5px solid var(--gold);
+  box-shadow:0 8px 20px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.15);
+}
+.bebidas-photo-split .feature-photo.bottom img{
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+  border-radius:0;
+  border:none;
+  box-shadow:none;
+  display:block;
+}
+.deco-photo-wrap{
+  position:relative;
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:16px;
+  flex:1;
+  min-height:180px;
+}
+.deco-ring{
+  position:absolute;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  border:2px dashed var(--terracotta-deep);
+  opacity:0.55;
+  transform:rotate(-8deg);
+  z-index:1;
+}
+.deco-dot{
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 2px 4px rgba(0,0,0,0.3);
+  z-index:1;
+}
+.deco-dot.d1{top:6%; left:18%;}
+.deco-dot.d2{bottom:10%; right:14%;}
+.deco-dot.d3{top:50%; right:2%; width:6px; height:6px;}
+
+.deco-photo.feature-photo.bottom{
+  position:relative;
+  z-index:2;
+  width:165px;
+  height:165px;
+  margin:0;
+  border-radius:50%;
+  overflow:hidden;
+  border:6px double var(--gold);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,0.45),
+    inset 0 0 0 3px rgba(241,230,201,0.5),
+    inset 0 0 18px rgba(0,0,0,0.35);
+}
+.deco-photo.feature-photo.bottom img{
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+  filter:saturate(1.08) contrast(1.05);
 }
